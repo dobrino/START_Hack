@@ -1,18 +1,47 @@
+from asyncore import read
+from cProfile import label
 import json
+import cv2
+import os
+import numpy as np
 
-with open('./../training.json', 'r') as file:
-    data = file.read()
 
-images = {}
-obj = json.loads(data)
+def read_json():
+    with open('./../training.json', 'r') as file:
+        data = file.read()
 
-for o in obj:
-    image = obj[o]
-    filename = image["filename"]
-    x_points = image["regions"][0]["shape_attributes"]["all_points_x"]
-    y_points = image["regions"][0]["shape_attributes"]["all_points_y"]
-    images[filename] = (x_points, y_points)
+    images = {}
+    obj = json.loads(data)
 
-print(images)
+    for o in obj:
+        image = obj[o]
+        filename = image["filename"]
+        x_points = image["regions"][0]["shape_attributes"]["all_points_x"]
+        y_points = image["regions"][0]["shape_attributes"]["all_points_y"]
+        images[filename] = (x_points, y_points)
 
-file.close()
+    file.close()
+
+    return images
+
+images = read_json()
+
+labeled_dir = "./../data/labeled/"
+unlabeled_dir = "./../data/unlabeled/"
+
+for img in images:
+    filename = img
+    image = cv2.imread(os.path.join(unlabeled_dir, filename))
+
+    (mask_x, mask_y) = images[filename]
+    print(mask_x)
+    print(mask_y)
+
+    pts = np.array([[mask_x[0], mask_y[0]],
+        [mask_x[1], mask_y[1]],
+        [mask_x[2], mask_y[2]],
+        [mask_x[3], mask_y[3]]], np.int32)
+
+    rect = cv2.fillPoly(image, [pts], 0)
+
+    cv2.imwrite(os.path.join(labeled_dir, filename), rect)
