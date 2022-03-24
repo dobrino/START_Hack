@@ -12,7 +12,7 @@ import random
 
 def area(polygons):
     closest_polygon = polygons[closest_poly(polygons)]
-    return closest_polygon.area
+    return closest_polygon.area/9.61
 
 
 def closest_poly(polygons):
