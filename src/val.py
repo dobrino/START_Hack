@@ -1,2 +1,0 @@
-def val():
-    print('TODO')

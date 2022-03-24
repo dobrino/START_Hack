@@ -97,3 +97,4 @@ def get_model(input_shape=(256, 256, 3),
     model = Model(inputs=inputs, outputs=classify)
 
     return model
+
