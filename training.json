@@ -1085,10 +1085,8 @@
     }
   },
   "7.png504203": {
-    "filename": [
+    "filename": 
       "7.png",
-      "7.png"
-    ],
     "size": [
       504203,
       504203
@@ -1160,18 +1158,6 @@
         "",
         ""
       ]
-    }
-  },
-  "15.png1087879": {
-    "filename": "15.png",
-    "size": 1087879,
-    "regions": [
-      
-    ],
-    "file_attributes": {
-      "caption": "",
-      "public_domain": "no",
-      "image_url": ""
     }
   },
   "16.png1425570": {
