@@ -32,7 +32,9 @@ unlabeled_dir = "./../data/unlabeled/"
 for img in images:
     filename = img
     image = cv2.imread(os.path.join(unlabeled_dir, filename))
-
+    
+    dimensions = image.shape
+    print(dimensions)
     (mask_x, mask_y) = images[filename]
     print(mask_x)
     print(mask_y)
@@ -41,7 +43,9 @@ for img in images:
         [mask_x[1], mask_y[1]],
         [mask_x[2], mask_y[2]],
         [mask_x[3], mask_y[3]]], np.int32)
+    
+    fill = cv2.rectangle(image, (0,0), (800,800), (255,255,255),-1)
 
-    rect = cv2.fillPoly(image, [pts], 0)
+    rect = cv2.fillPoly(fill, [pts], 0)
 
     cv2.imwrite(os.path.join(labeled_dir, filename), rect)
