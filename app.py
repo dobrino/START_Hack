@@ -5,9 +5,25 @@ from PIL import Image
 import io
 import cv2
 import numpy as np
+from sympy import Polygon, Point
 
 
+def area(polygons):
+    closest_polygon = polygons[closest_poly(polygons)]
+    return closest_polygon.area
 
+def closest_poly(polygons):
+    middle = Point(400,400)
+    for i in range(len(polygons)):
+        if polygons[i].encloses_point(middle):
+            return i
+    min_distance = polygons[1].distance(middle)
+    closest_polygon_index = 1
+    for x in range(len(polygons)):
+        if polygons[x].distance(middle) < min_distance:
+            min_distance = polygons[x].distance(middle)
+            closest_polygon_index = x
+    return closest_polygon_index
 #app = Flask(__name__)
 #app.secret_key = b'mangomango'
 #
