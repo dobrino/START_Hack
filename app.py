@@ -48,11 +48,11 @@ def generate_image(address):
     img = img_arr[:, :, ::-1]
     pil_image = Image.fromarray(img)
     pil_image.show()
-    pil_image.save('./static/temp.png')
-    return pil_image
+    return img
 
 
-def calculate_stats(address="Gertrud-Grunow-Straße 4" ):
+def calculate_stats():
+    address = "Gertrud-Grunow-Straße 4"  # input('Enter Address:')
     img = generate_image(address)
 
     # feed img to segmentation model
@@ -60,11 +60,10 @@ def calculate_stats(address="Gertrud-Grunow-Straße 4" ):
 
     temparea = random.randrange(1, 1000)
     print(f"determined Area: {temparea}")
-
     self_consumption_ratio = .5  # input("Enter predicted self_need ratio: ")
 
     # c.print(area, self_consumption_ratio)
-    return (temparea,img)
+
 
 def main():
     print('empty main')
