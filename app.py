@@ -52,7 +52,7 @@ def generate_image(address):
 
 
 def calculate_stats():
-    address = "Gertrud-Grunow-Straße 4"  # input('Enter Address:')
+    address = "Am Kleinfeld 31"  # input('Enter Address:')
     img = generate_image(address)
 
     # feed img to segmentation model
@@ -66,7 +66,7 @@ def calculate_stats():
 
 
 def main():
-    print('empty main')
+    calculate_stats()
 
 if __name__ == "__main__":
     main()
