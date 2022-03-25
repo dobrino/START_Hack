@@ -48,9 +48,9 @@ def get_break_even_time(area, self_consumption):
     return get_initial_investment_costs(area) / get_yearly_revenue(area, self_consumption)
 
 
-def main():
-    area = 2500
-    self_consumption_ratio = .5  # input("Enter predicted self_need ratio: ")
+def print(area, self_consumption_ratio):
+    area = area
+    self_consumption_ratio = self_consumption_ratio  # input("Enter predicted self_need ratio: ")
 
     print(f"Peak Power of Solar Panel System on Roof: {get_peak_power(area)} kW")
     print(f"Yearly energy Output: {get_energy_output(area)} kWh")
@@ -60,7 +60,3 @@ def main():
     print(f"Yearly revenue in Euro: Example with 100% self consumption: {get_yearly_revenue(area, 1)}€")
     print(f"Installation costs/Initial investment with {self_consumption_ratio * 100}% self_consumption: {get_initial_investment_costs(area)}€")
     print(f"Break even after {round(get_break_even_time(area, float(self_consumption_ratio)), 2)} years. Yay!")
-
-
-if __name__ == "__main__":
-    main()

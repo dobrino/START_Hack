@@ -4,7 +4,7 @@ body {                              /*formatting for body component of html*/
  }
  
  p {                                 /*formatting for paragraph of html*/
-   color:MidnightBlue;
+   color: #0cee2f;
    font-family: Shanti;
    font-size:2.4em;
  }
