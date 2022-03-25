@@ -15,7 +15,7 @@ api_key = "pk.eyJ1IjoiaWRvbnR3ZWFyYnJhcyIsImEiOiJjbDE1MDFjZWEwdG16M2NzNmxsMDVoc2
 
 def area(polygons):
     closest_polygon = polygons[closest_poly(polygons)]
-    return closest_polygon.area
+    return closest_polygon.area/9.61
 
 
 def closest_poly(polygons):
