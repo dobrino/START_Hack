@@ -16,14 +16,14 @@ def getArea(img_path):
     poly = Polygon(points)
     x, y = poly.exterior.xy
     plt.plot(x, y, c="red")
-    plt.show()
+    # plt.show()
 
     area = poly.area
     print(area)
 
-def separate():
+def separate(path):
     # Load image, grayscale, Gaussian blur, Otsu's threshold
-    image = cv2.imread("./../data/labeled/20.png")
+    image = cv2.imread(path)
     original = image.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (3,3), 0)
@@ -33,6 +33,13 @@ def separate():
     ROI_number = 0
     cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
     cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+
+    #init temp variables and constants
+    minimum_distance = 800
+    middle = (400,400)
+    middle_poly_index = 0
+    
+
     for c in cnts:
         # Obtain bounding rectangle to get measurements
         x,y,w,h = cv2.boundingRect(c)
@@ -51,12 +58,11 @@ def separate():
         cv2.rectangle(image,(x,y),(x+w,y+h),(36,255,12), 4)
         cv2.circle(image, (cX, cY), 10, (320, 159, 22), -1) 
 
+        tmp_dist = np.linalg.norm(middle-(cX,cY))
+        if tmp_dist < minimum_distance:
+            middle_poly_index = c
+            minimum_distance = tmp_dist
+
     cv2.imwrite('image.png', image)
-
-img = "./ROI_0.png"
-getArea(img)
-
-img2 = "./ROI_1.png"
-getArea(img2)
 
 

@@ -8,6 +8,9 @@ import numpy as np
 from sympy import Polygon, Point
 import calculations as c
 import random
+from src.extract import getArea, separate
+
+from src.predict import predict
 
 
 api_key = "pk.eyJ1IjoiaWRvbnR3ZWFyYnJhcyIsImEiOiJjbDE1MDFjZWEwdG16M2NzNmxsMDVoc2R5In0.U0rNnBS_rRe1EIQPvbID6A"
@@ -47,8 +50,8 @@ def generate_image(address):
     img_arr = cv2.cvtColor(np.array(Image.open(bytes_im)), cv2.COLOR_RGB2BGR)
     img = img_arr[:, :, ::-1]
     pil_image = Image.fromarray(img)
-    pil_image.show()
-    return img
+    # pil_image.show()
+    return pil_image
 
 
 def calculate_stats():
@@ -57,16 +60,21 @@ def calculate_stats():
 
     # feed img to segmentation model
     # process result through area function
+    img.save("tmp.png")
+    predict("tmp.png")
+    separate("tmp.png")
+    area = getArea("ROI_0.png")
 
-    temparea = random.randrange(1, 1000)
-    print(f"determined Area: {temparea}")
+    if area is None:
+        area = random.randrange(1, 1000)
+    print(f"determined Area: {area}")
     self_consumption_ratio = .5  # input("Enter predicted self_need ratio: ")
 
     # c.print(area, self_consumption_ratio)
 
 
 def main():
-    print('empty main')
+    calculate_stats()
 
 if __name__ == "__main__":
     main()
