@@ -13,7 +13,7 @@ import random
 api_key = "pk.eyJ1IjoiaWRvbnR3ZWFyYnJhcyIsImEiOiJjbDE1MDFjZWEwdG16M2NzNmxsMDVoc2R5In0.U0rNnBS_rRe1EIQPvbID6A"
 
 
-def closest_poly(polygons):
+def closest_poly(polygons): #devide area by 9.61
     middle = Point(400,400)
     for i in range(len(polygons)):
         if polygons[i].encloses_point(middle):
