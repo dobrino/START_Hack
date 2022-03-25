@@ -1,6 +1,6 @@
 body {                              /*formatting for body component of html*/
-    background-color:white;
-    text-align:center;
+    background-color:rgb(194, 30, 30);
+    text-align:right;
  }
  
  p {                                 /*formatting for paragraph of html*/
