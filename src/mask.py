@@ -16,9 +16,16 @@ def read_json():
     for o in obj:
         image = obj[o]
         filename = image["filename"]
-        x_points = image["regions"][0]["shape_attributes"]["all_points_x"]
-        y_points = image["regions"][0]["shape_attributes"]["all_points_y"]
-        images[filename] = (x_points, y_points)
+        coords = []
+        count = 0
+        for reg in image["regions"]:
+            x_points = image["regions"][count]["shape_attributes"]["all_points_x"]
+            y_points = image["regions"][count]["shape_attributes"]["all_points_y"]
+
+            coords.append((x_points, y_points))
+            count = count + 1
+       
+        images[filename] = coords
 
     file.close()
 
@@ -32,20 +39,21 @@ unlabeled_dir = "./../data/unlabeled/"
 for img in images:
     filename = img
     image = cv2.imread(os.path.join(unlabeled_dir, filename))
+
+    fill = cv2.rectangle(image, (0,0), (800,800), (255,255,255),-1)
     
     dimensions = image.shape
     print(dimensions)
-    (mask_x, mask_y) = images[filename]
-    print(mask_x)
-    print(mask_y)
-
-    pts = np.array([[mask_x[0], mask_y[0]],
-        [mask_x[1], mask_y[1]],
-        [mask_x[2], mask_y[2]],
-        [mask_x[3], mask_y[3]]], np.int32)
+    coords = images[filename] # array of tuples
     
-    fill = cv2.rectangle(image, (0,0), (800,800), (255,255,255),-1)
+    for coord in coords:
+        (mask_x, mask_y) = coord
+        pts = []
+        count = 0
+        for x in mask_x:
+            pts.append([mask_x[count], mask_y[count]])
+            count = count + 1
+        
+        fill = cv2.fillPoly(fill, [np.array(pts, np.int32)], 0)
 
-    rect = cv2.fillPoly(fill, [pts], 0)
-
-    cv2.imwrite(os.path.join(labeled_dir, filename), rect)
+    cv2.imwrite(os.path.join(labeled_dir, filename), fill)

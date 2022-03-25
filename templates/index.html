@@ -5,14 +5,14 @@
   <title>Mango</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon2.ico">
+  <link rel="shortcut icon" type="image/x-icon" href="{{ url_for('static',filename='assets/img/favicon2.ico')}}">
   <!-- Load Require CSS -->
-  <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static',filename='assets/css/bootstrap.min.css') }}" rel="stylesheet">
   <!-- Font CSS -->
-  <link href="assets/css/boxicon.min.css" rel="stylesheet">
+  <link href="{{ url_for('static',filename='assets/css/boxicon.min.css') }}" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
   <!-- Load Tempalte CSS -->
-  <link rel="stylesheet" href="assets/css/templatemo.css">
+  <link rel="stylesheet" href="{{ url_for('static',filename='assets/css/templatemo.css') }}">
 </head>
 
 <body>
@@ -34,60 +34,69 @@
         <div class="banner-content col-lg-8 col-8 offset-2 m-lg-auto text-left py-5 pb-5">
           <h1 id="mainHeading"
             class="banner-heading h1 text-secondary display-3 mb-0 pb-5 mx-0 px-0 light-300 typo-space-line">
-            Unlock your <strong>Potential</strong>
-            <br>Sola<strong>Net</strong>
+            Unlock your <strong>Potential.</strong>
+            <br>Discover your solar energy solution with Sola<strong>Net</strong>
           </h1>
           <div id="searchView" style="display:block">
             <p class="banner-body text-muted py-3 mx-0 px-0">
-              Enter your address, our application will generate a offer for photovoltaic based on semantic segmentation
+              Enter your address, our application will generate an offer for photovoltaic based on semantic segmentation
               of satellite imagery
             <div class="row">
-              <div class="col-sm-4"> <label id="address" for="fname">Address:</label>
-                <input type="text" id="fname" name="fname"><br><br>
+              <form action="#result" method="post">
+              <div class="col-sm-4">
+
+                      <!--
+                  <label id="address" for="fname">Address:</label>
+                  <input type="text" id="fname" name="fname"><br><br>
+                   <-->
+                      <label id="address" for="nm">Address:</label>
+                      <input type="text" name="nm" /><br><br>
+
+
               </div>
-              <div class="col-sm-4"><a class="btn btn-primary" href="#result" role="button">Search</a></div>
+               <div class="col-sm-4"> <button type="submit" class="btn btn-primary">Submit</button> <!-- <a class="btn btn-primary" href="#result" role="button" value="submit">Search</a>--></div>
+                </form>
             </div>
           </div>
         </div>
 
       </div>
     </div>
-  </div>
+  </div>i
   <!-- End Banner Hero -->
   <div class="container-fluid vh-100">
     <div class="mx-4 row" id="result">
       <div class="col mt-4 text-center">
         <div class="thumbnail">
-          <a href="assets/img/example.jpg">
-            <img src="assets/img/example.jpg" style="width:90%">
+          <a href="{{ url_for('static',filename='assets/img/example.jpg') }}">
+            <img src={{ url_for('static',filename='temp.png')  }} style="width:90%">
           </a>
         </div>
       </div>
       <div class="col text-center mt-4">
-        <h2 id="RevenueSpan">Estimated Revenue</h2>
-        <p id="Revenue50">50% self use: 300€</p>
-        <p id="Revenue30">30% self use: 250€</p>
-        <p id="Revenue20">20% self use: 200€</p>
-        <p id="Amortisation">2 to 5 years for ammortisation</p>
+        <h2 id="RevenueSpan">Estimated Yearly Revenue Performance</h2>
+        <p id="Revenue50"> <h5> 50% self-consumption: {{ self_consumption_50 }}€</h5></p>
+        <p id="Revenue30"> <h5> 30% self-consumption: {{ self_consumption_30 }}€</h5></p>
+        <p id="Revenue20"> <h5> 15% self-consumption: {{ self_consumption_15 }}€</h5></p>
       </div>
       <div class="col mt-4 text-center">
-        <h2>Estimated Investment</h2>
-        <p id="CostsSolarPanel">30 m²</p>
-        <p id="CostsInverter">Installable Peak Power: 10 kWp</p>
-        <p id="CostsCablingsqaw">Nominal Power: 5000 W</p>
-        <p id="TotalCost">bla bla</p>
+        <h2>Estimated Initial Investment Costs</h2>
+        <p id="CostsSolarPanel"><h5>Solar Panel Costs: {{ panel_cost }}€</h5></p>
+        <p id="CostsInverter"><h5>Power Inverter Costs: {{ inverter_cost }} kWp</h5></p>
+        <p id="CostsCablingsqaw"><h5>Installation Labor Costs: {{ installation_cost }} €</h5></p>
+        <p id="TotalCost"><h5>Total required initial investment: {{ total_cost }}€</h5></p>
       </div>
     </div>
 
     <div class="mx-4 row" id="result">
       <div class="col mt-4 text-center">
-        <h2>Estimated Roof Area</h2>
-        <h1>200 m² | 20 kWp</h1>
+        <h2>Identified Suitable Roof Area</h2><br>
+        <h1>{{ roof_area }} m²   |   {{peak_power}} kWp installable Capacity</h1>
 
       </div>
       <div class="col mt-4 text-center">
-        <h2>Estimated Break-even-Point</h2>
-        <h1>5 Years</h1>
+        <h2>Calculated Break-even-Point of investment</h2> (assuming 30% self-consumption)<br>
+        <h1>{{ break_even }} Years</h1>
       </div>
 
       <div class="container my-3">
@@ -100,11 +109,11 @@
 
   <div id="graph" class="row container-fluid vh-100 mx-4">
     <div class="col">
-      <h2 id="RevenueSpan" style=" margin-top: 3%;">Break-even-Point</h2>
+      <h2 id="RevenueSpan" style=" margin-top: 3%;">Break-even-time vs. self-consumption ratio</h2>
       <canvas id="myChart" style="width:100%; margin-top: 5%;"></canvas>
     </div>
     <div class="col" style="margin-top: 8%;">
-      <p class="text-danger" style="font-size: large;">Break-even-Line</p>
+      <p class="text-danger" style="font-size: large;">Initial Investment</p>
       <p class="text-success" style="font-size: large;">50% self consumption </p>
       <p class="text-primary" style="font-size: large;">30% self consumption </p>
       <p class="text-warning" style="font-size: large;">20% self consumption</p>
@@ -115,7 +124,7 @@
   <!-- For Graph -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
   <!-- Bootstrap -->
-  <script src="assets/js/bootstrap.bundle.min.js"></script>
+  <script src="{{ url_for('static',filename='assets/js/bootstrap.bundle.min.js') }}"></script>
   <!-- Page Script -->
   <script>
 
@@ -124,7 +133,7 @@
       document.getElementById("mainHeading").textContent = 'Result View';
       document.getElementById("resultView").style["display"] = "block";
       document.getElementById("searchView").style["display"] = "none";
-      document.getElementById("ResultingImage").src = "assets/img/example.jpg";
+      document.getElementById("ResultingImage").src = "{{ url_for('static',filename='assets/img/example.jpg') }}";
 
       /*  //Costs
         document.getElementById("TotalCost").textContent       = 'TbD';
@@ -147,25 +156,25 @@
     }
 
     //Graph:
-    var xValues = [100, 200, 300, 400, 500, 600, 700, 800, 900, 1000];
+    var xValues = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14 , 15, 16];
     new Chart("myChart", {
       type: "line",
       data: {
         labels: xValues,
         datasets: [{
-          data: [1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600, 1600],
+          data: [{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}, {{ installation_cost }},{{ installation_cost }}],
           borderColor: "red",
           fill: false
         }, {
-          data: [1600, 1700, 1700, 1900, 2000, 2700, 4000, 5000, 6000, 7000],
+          data: [{{1 * self_consumption_50 }}, {{2 * self_consumption_50 }}, {{3 * self_consumption_50 }}, {{4 * self_consumption_50 }},{{5 * self_consumption_50 }}, {{6 * self_consumption_50 }}, {{7 * self_consumption_50 }}, {{8 * self_consumption_50 }}, {{9 * self_consumption_50 }}, {{10 * self_consumption_50 }}, {{11 * self_consumption_50 }}, {{12 * self_consumption_50 }},{{13 * self_consumption_50 }}, {{14 * self_consumption_50 }}, {{15 * self_consumption_50 }}, {{16 * self_consumption_50 }}],
           borderColor: "green",
           fill: false
         }, {
-          data: [300, 700, 2000, 5000, 6000, 4000, 2000, 1000, 200, 100],
+          data: [{{1 * self_consumption_30 }}, {{2 * self_consumption_30 }}, {{3 * self_consumption_30 }}, {{4 * self_consumption_30 }},{{5 * self_consumption_30 }}, {{6 * self_consumption_30 }}, {{7 * self_consumption_30 }}, {{8 * self_consumption_30 }}, {{9 * self_consumption_30 }}, {{10 * self_consumption_30 }}, {{11 * self_consumption_30 }}, {{12 * self_consumption_30 }},{{13 * self_consumption_30 }}, {{14 * self_consumption_30 }}, {{15 * self_consumption_30 }}, {{16 * self_consumption_30 }}],
           borderColor: "blue",
           fill: false
         }, {
-          data: [300, 400, 500, 600, 700, 800, 900, 1000, 1200, 1300],
+          data: [{{1 * self_consumption_15 }}, {{2 * self_consumption_15 }}, {{3 * self_consumption_15 }}, {{4 * self_consumption_15 }},{{5 * self_consumption_15 }}, {{6 * self_consumption_15 }}, {{7 * self_consumption_15 }}, {{8 * self_consumption_15 }}, {{9 * self_consumption_15 }}, {{10 * self_consumption_15 }}, {{11 * self_consumption_15 }}, {{12 * self_consumption_15 }},{{13 * self_consumption_15 }}, {{14 * self_consumption_15 }}, {{15 * self_consumption_15 }}, {{16 * self_consumption_15 }}],
           borderColor: "orange",
           fill: false
         }]

@@ -42,7 +42,7 @@ p, a {font-weight: 400;}
   width: 150px;
   display:block;
   position: absolute;
-  border-bottom:  5px solid #6266ea;
+  border-bottom:  5px solid #0073ee;
   padding-top: .5em;
 }
 .typo-space-line-center::after {
@@ -64,7 +64,7 @@ p, a {font-weight: 400;}
 }
 #index_banner .carousel-control-prev i,
 #index_banner .carousel-control-next i {
-  color: #6266ea !important;
+  color: #0073ee !important;
   text-decoration: none;
   font-size: 4em;
 }
@@ -73,7 +73,7 @@ p, a {font-weight: 400;}
 }
 #index_banner .carousel-indicators li,
 #index_banner .carousel-indicators.active {
-  background-color: #6266ea !important;
+  background-color: #0073ee !important;
 }
 .service-wrapper .service-footer {
   max-width: 720px;
