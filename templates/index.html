@@ -1,11 +1,185 @@
 <!DOCTYPE html>
-<html> 
-    <head>  
-        <meta charset="UTF-8">     
-        <title>Solar Panel App</title>
-        <link rel="stylesheet" href="{{url_for('static',filename='CSS/main.css')}}">
-    </head>
-    <body>
-        <h1>Check if solar panels are worth it for you </h1>
-    </body>
+<html lang="en">
+ 
+
+<head>
+    <title>Mango</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon2.ico">
+    <!-- Load Require CSS -->
+    <link href="assets/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font CSS -->
+    <link href="assets/css/boxicon.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300;400;600&display=swap" rel="stylesheet">
+    <!-- Load Tempalte CSS -->
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav id="main_nav" class="navbar navbar-expand-lg navbar-light bg-white shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand h1" href="index.html">
+            <!--  <img src="assets/img/favicon2.ico" />-->
+                <span class="text-dark h4">Sola</span><span class="text-primary h4">Net</span>
+            </a>
+        </div>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Start Banner Hero -->
+    <div class="row container-fluid vh-100">
+        <div id="index_banner" class="banner-vertical-center-index container-fluid pt-5">
+                    <div class="carousel-item active">
+                            <div class="banner-content col-lg-8 col-8 offset-2 m-lg-auto text-left py-5 pb-5">
+                                <h1 id="mainHeading" class="banner-heading h1 text-secondary display-3 mb-0 pb-5 mx-0 px-0 light-300 typo-space-line">
+                                    Fight <strong>Fossils</strong>
+                                    <br>Sola<strong>Net</strong>
+                              </h1>
+                          <div id="searchView" style="display:block">
+                                <p class="banner-body text-muted py-3 mx-0 px-0">
+                                  Enter your address, our application will generate a offer for photovoltaic based on semantic segmentation of satellite imagery
+                              
+                        <div class="row">
+                        <div class="col-sm-4">    <label id="address" for="fname">Address:</label>
+                        <input type="text" id="fname" name="fname"><br><br></div>
+                        <div class="col-sm-4">      <button type="button" class="btn btn-primary">Search</button></div>
+                        </div>
+                    </div>
+              </div>
+
+              <div class="mx-auto" style="width: 200px;">
+                <a class="btn btn-primary" href="#result" role="button">To Result</a>
+              </div>
+             
+        </div>
+    </div>
+    </div>
+    <!-- End Banner Hero -->
+
+
+<div id="result" class="row container-fluid vh-100" >
+   <div class="col-sm-6">
+<img id="ResultingImage" src="assets/img/example.jpg" style="height:400px; width:400px" />
+   </div>
+   <div class="col-sm-3">
+    <h2 class="pricing-table-heading h5 semi-bold-600">Yearly Revenue</h2>
+    <p id="RevenueSpan">$200€ - 300€</p>
+    <ul class="pricing-table-body text-start text-dark px-4 list-unstyled light-300">
+        <li id="Revenue100"><i class="bx bxs-circle me-2" ></i>100% own use: 300€</li>
+        <li id="Revenue70"><i class="bx bxs-circle me-2" ></i>70% own use: 250€</li>
+        <li id="Revenue50"><i class="bx bxs-circle me-2"></i>50% own use: 200€</li>
+        <li id="Amortisation"><i class="bx bxs-circle me-2"></i>5 to 2 years for ammortisation</li>
+    </ul>
+    <h2 class="pricing-table-heading h5 semi-bold-600">Investment</h2>
+    <p id="TotalCost">€700</p>
+    <ul class="pricing-table-body text-start text-dark px-4 list-unstyled light-300">
+        <li id="CostsSolarPanel"><i class="bx bxs-circle me-2"></i>5 Solar Pannels: 500€ </li>
+        <li id="CostsInverter"><i class="bx bxs-circle me-2"></i>1 Inverter: 100€ </li>
+        <li id="CostsCabling"><i class="bx bxs-circle me-2"></i>Cabling: 50€</li>
+    </ul>
+  </div>
+  <div class="col-sm-3">
+    <h2 class="pricing-table-heading h5 semi-bold-600">Usable Roof Area</h2>
+    <p id="RoofArea">30 m²</p>
+    <ul class="pricing-table-body text-start text-dark px-4 list-unstyled light-300">
+      <li id="PeakPower"><i class="bx bxs-circle me-2"></i>Installable Peak Power: 10 kWp</li>
+      <li id="NominalPower"><i class="bx bxs-circle me-2"></i>Nominal Power: 5000 W</li>
+      <li id="bla1"><i class="bx bxs-circle me-2"></i>bla bla</li>
+      <li id="bla2"><i class="bx bxs-circle me-2"></i>bla bla</li>
+    </ul>
+  </div>
+  <div class="mx-auto" style="width: 200px;">
+      <a class="btn btn-primary" href="#graph" role="button">zu graph</a>
+  </div>
+
+ </div>
+</div>
+
+<div class="row container-fluid vh-100" id="graph">
+<div class="col-sm-12">
+  <canvas id="myChart" style="width:100%;max-width:600px"></canvas>
+</div>
+</div>
+
+
+
+    <!-- For Graph -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.5.0/Chart.min.js"></script>
+    <!-- Bootstrap -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <!-- Load jQuery require for isotope -->
+    <script src="assets/js/jquery.min.js"></script>
+    <!-- Isotope -->
+    <script src="assets/js/isotope.pkgd.js"></script>
+    <!-- Page Script -->
+    <script>
+      
+
+    function start_calc() {
+      var requestedAddress =   document.getElementById("address").value;
+
+      document.getElementById("mainHeading").textContent = 'Result View';
+      document.getElementById("resultView").style["display"] = "block";
+      document.getElementById("searchView").style["display"] = "none";
+
+      document.getElementById("ResultingImage").src = "assets/img/example.jpg";
+
+    /*  //Costs
+      document.getElementById("TotalCost").textContent       = 'TbD';
+      document.getElementById("CostsSolarPanel").textContent = 'TbD';
+      document.getElementById("CostsInverter").textContent   = 'TbD';
+      document.getElementById("CostsCabling").textContent    = 'TbD';
+      //Revenue
+      document.getElementById("RevenueSpan").textContent  = 'TbD';
+      document.getElementById("Revenue100").textContent   = 'TbD';
+      document.getElementById("Revenue70").textContent    = 'TbD';
+      document.getElementById("Revenue50").textContent    = 'TbD';
+      document.getElementById("Amortisation").textContent = 'TbD';
+      //Revenue
+      document.getElementById("RoofArea").textContent = 'TbD';
+      document.getElementById("PeakPower").textContent = 'TbD';
+      document.getElementById("NominalPower").textContent = 'TbD';
+      document.getElementById("bla1").textContent = 'bla';
+      document.getElementById("bla2").textContent = 'bla bla';
+
+      */
+    }
+
+    //Graph:
+var xValues = [100,200,300,400,500,600,700,800,900,1000];
+
+new Chart("myChart", {
+  type: "line",
+  data: {
+    labels: xValues,
+    datasets: [{
+      data: [860,1140,1060,1060,1070,1110,1330,2210,7830,2478],
+      borderColor: "red",
+      fill: false
+    }, {
+      data: [1600,1700,1700,1900,2000,2700,4000,5000,6000,7000],
+      borderColor: "green",
+      fill: false
+    }, {
+      data: [300,700,2000,5000,6000,4000,2000,1000,200,100],
+      borderColor: "blue",
+      fill: false
+    }]
+  },
+  options: {
+    legend: {display: false}
+  }
+});
+
+
+
+    </script>
+    <!-- Templatemo -->
+    <script src="assets/js/templatemo.js"></script>
+    <!-- Custom -->
+    <script src="assets/js/custom.js"></script>
+
+</body>
 </html>
