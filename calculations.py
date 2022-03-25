@@ -7,7 +7,7 @@ panel_baseprice_per_kW = 1500
 
 
 def get_peak_power(area):
-    return area * solarRadiation * efficiency;
+    return round(area * solarRadiation * efficiency,2)
 
 
 def get_energy_output(area):
@@ -15,40 +15,40 @@ def get_energy_output(area):
     peak_power = get_peak_power(area)
     for k in specific_efficiency:
         energy_output += k * peak_power
-    return energy_output
+    return round(energy_output,2)
 
 
 def get_yearly_revenue(area, self_consumption):
     energy_output = get_energy_output(area)
-    return energy_output * self_consumption * price_per_kwh_ownConsumption + energy_output * (
-                1 - self_consumption) * price_per_kwh_toGrid
+    return round(energy_output * self_consumption * price_per_kwh_ownConsumption + energy_output * (
+                1 - self_consumption) * price_per_kwh_toGrid,2)
 
 
 def get_installation_fixcosts(area):
-    return 750 + area * 20
+    return round(750 + area * 20,2)
 
 
 def get_inverter_costs(area):
     # Assuming that one inverter can handle up to 10kW and costs 200€
-    return int(get_peak_power(area) / 10) * 200
+    return round(int(get_peak_power(area) / 10) * 200,2)
 
 
 def get_panel_costs_by_area(area):
     # Bulk discount function until 200kW installed capacity
     if area >= 800:
         return panel_baseprice_per_kW - 600
-    return panel_baseprice_per_kW - ((-1) * ((area / 800) - 1) ** 2 + 1) * 600
+    return round(panel_baseprice_per_kW - ((-1) * ((area / 800) - 1) ** 2 + 1) * 600,2)
 
 
 def get_initial_investment_costs(area):
-    return get_panel_costs_by_area(area) * get_peak_power(area) + get_installation_fixcosts(area) + get_inverter_costs(area)
+    return round(get_panel_costs_by_area(area) * get_peak_power(area) + get_installation_fixcosts(area) + get_inverter_costs(area),2)
 
 
 def get_break_even_time(area, self_consumption):
-    return get_initial_investment_costs(area) / get_yearly_revenue(area, self_consumption)
+    return round(get_initial_investment_costs(area) / get_yearly_revenue(area, self_consumption),2)
 
 
-def print(area, self_consumption_ratio):
+def printInfo(area, self_consumption_ratio):
     area = area
     self_consumption_ratio = self_consumption_ratio  # input("Enter predicted self_need ratio: ")
 
@@ -58,5 +58,13 @@ def print(area, self_consumption_ratio):
     print(f"Yearly revenue in Euro: Example with 30% self consumption: {round(get_yearly_revenue(area, .3), 2)}€")
     print(f"Yearly revenue in Euro: Example with 50% self consumption: {get_yearly_revenue(area, .5)}€")
     print(f"Yearly revenue in Euro: Example with 100% self consumption: {get_yearly_revenue(area, 1)}€")
-    print(f"Installation costs/Initial investment with {self_consumption_ratio * 100}% self_consumption: {get_initial_investment_costs(area)}€")
-    print(f"Break even after {round(get_break_even_time(area, float(self_consumption_ratio)), 2)} years. Yay!")
+    print(f"Installation costs/Initial investment: {get_initial_investment_costs(area)}€")
+    print(f"Break even with {self_consumption_ratio * 100}% self_consumption after {round(get_break_even_time(area, float(self_consumption_ratio)), 2)} years. Yay!")
+
+
+# def main():
+#     area = 548
+#     printInfo(area, .3)
+#
+# if __name__ == "__main__":
+#     main()
