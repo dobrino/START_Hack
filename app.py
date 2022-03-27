@@ -5,7 +5,7 @@ from PIL import Image
 import io
 import cv2
 import numpy as np
-from sympy import Polygon, Point
+from sympy import Point
 import calculations as c
 import random
 from src.extract import getArea, separate
@@ -50,7 +50,6 @@ def generate_image(address):
     img_arr = cv2.cvtColor(np.array(Image.open(bytes_im)), cv2.COLOR_RGB2BGR)
     img = img_arr[:, :, ::-1]
     pil_image = Image.fromarray(img)
-    # pil_image.show()
     return pil_image
 
 
@@ -69,8 +68,6 @@ def calculate_stats():
         area = random.randrange(1, 1000)
     print(f"determined Area: {area}")
     self_consumption_ratio = .5  # input("Enter predicted self_need ratio: ")
-
-    # c.print(area, self_consumption_ratio)
 
 
 def main():

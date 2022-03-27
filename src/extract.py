@@ -1,7 +1,6 @@
 import numpy as np
 import cv2
 from matplotlib import pyplot as plt
-#import sympy
 from shapely.geometry import Polygon
 
 
@@ -16,7 +15,6 @@ def getArea(img_path):
     poly = Polygon(points)
     x, y = poly.exterior.xy
     plt.plot(x, y, c="red")
-    # plt.show()
 
     area = poly.area
     print(area)
@@ -37,7 +35,6 @@ def separate(path):
     #init temp variables and constants
     minimum_distance = 800
     middle = (400,400)
-    middle_poly_index = 0
     
 
     for c in cnts:
