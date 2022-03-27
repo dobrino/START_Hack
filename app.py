@@ -1,5 +1,3 @@
-from flask import Flask, render_template, request, flash
-
 import requests
 from PIL import Image
 import io
@@ -67,11 +65,11 @@ def calculate_stats():
     if area is None:
         area = random.randrange(1, 1000)
     print(f"determined Area: {area}")
-    self_consumption_ratio = .5  # input("Enter predicted self_need ratio: ")
 
 
 def main():
     calculate_stats()
+
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,3 @@
-from asyncore import read
-from cProfile import label
 import json
 import cv2
 import os
@@ -24,12 +22,13 @@ def read_json():
 
             coords.append((x_points, y_points))
             count = count + 1
-       
+
         images[filename] = coords
 
     file.close()
 
     return images
+
 
 images = read_json()
 
@@ -40,12 +39,12 @@ for img in images:
     filename = img
     image = cv2.imread(os.path.join(unlabeled_dir, filename))
 
-    fill = cv2.rectangle(image, (0,0), (800,800), (255,255,255),-1)
-    
+    fill = cv2.rectangle(image, (0, 0), (800, 800), (255, 255, 255), -1)
+
     dimensions = image.shape
     print(dimensions)
-    coords = images[filename] # array of tuples
-    
+    coords = images[filename]  # array of tuples
+
     for coord in coords:
         (mask_x, mask_y) = coord
         pts = []
@@ -53,7 +52,7 @@ for img in images:
         for x in mask_x:
             pts.append([mask_x[count], mask_y[count]])
             count = count + 1
-        
+
         fill = cv2.fillPoly(fill, [np.array(pts, np.int32)], 0)
 
     cv2.imwrite(os.path.join(labeled_dir, filename), fill)

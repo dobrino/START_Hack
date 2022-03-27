@@ -1,6 +1,7 @@
 from tensorflow.keras.layers import Conv2D, BatchNormalization, Activation, MaxPool2D, Input, UpSampling2D, concatenate, Input
 from tensorflow.keras import Model
 
+
 def upsample(input, input_size):
     up = Conv2D(input_size, (3, 3), padding='same')(input)
     up = BatchNormalization()(up)
@@ -12,8 +13,9 @@ def upsample(input, input_size):
     up = BatchNormalization()(up)
     return Activation('relu')(up)
 
+
 def get_model(input_shape=(256, 256, 3),
-                 num_classes=1):
+              num_classes=1):
     inputs = Input(shape=input_shape)
     # 256
 
@@ -97,4 +99,3 @@ def get_model(input_shape=(256, 256, 3),
     model = Model(inputs=inputs, outputs=classify)
 
     return model
-
