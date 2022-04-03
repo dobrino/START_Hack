@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 from tensorflow.keras import Model
-from nn import RoofSegmentationModel
+from src.nn import RoofSegmentationModel
 
 
 def load_rooftop_segmentation_model(input_shape: Tuple[int, int, int]=(256, 256, 3),

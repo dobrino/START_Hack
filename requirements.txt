@@ -1,0 +1,8 @@
+# TODO: add explicit versions
+flask
+numpy
+tensorflow
+opencv-python
+matplotlib
+shapely
+python-dotenv

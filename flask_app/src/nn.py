@@ -34,8 +34,8 @@ class RoofSegmentationModel(Model):
         self.up_conv_1 = _conv_block(depth=2, filters=64)
         self.up_conv_0 = _conv_block(depth=2, filters=32)
         self.grayscale_segment = Conv2D(num_classes, (1, 1), activation='sigmoid')
-        self.pool = MaxPool2D((2, 2), strides=(2, 2))
-        self.up = UpSampling2D((2, 2), strides=(2, 2))
+        self.pool = MaxPool2D()
+        self.upsample = UpSampling2D()
         self.concat = Concatenate(axis=3)
 
     def call(self, input, training: bool=False):
@@ -45,14 +45,14 @@ class RoofSegmentationModel(Model):
         down2 = self.down_conv_2(self.pool(down1))
         down3 = self.down_conv_3(self.pool(down2))
         down4 = self.down_conv_4(self.pool(down3))
-        center = self.down_conv_5(self.pool(down4))
+        center = self.down_conv_5(down4)
 
         # upsampling + concat
-        up4 = self.up_conv_4(self.concat(self.up(center), down4))
-        up3 = self.up_conv_4(self.concat(self.up(up4), down3))
-        up2 = self.up_conv_4(self.concat(self.up(up3), down2))
-        up1 = self.up_conv_4(self.concat(self.up(up2), down1))
-        up0 = self.up_conv_4(self.concat(self.up(up1), down0))
+        up4 = self.up_conv_4(self.concat([self.upsample(center), down4]))
+        up3 = self.up_conv_4(self.concat([self.upsample(up4), down3]))
+        up2 = self.up_conv_4(self.concat([self.upsample(up3), down2]))
+        up1 = self.up_conv_4(self.concat([self.upsample(up2), down1]))
+        up0 = self.up_conv_4(self.concat([self.upsample(up1), down0]))
 
         # grayscale segmentation
         seg_out = self.grayscale_segment(up0)

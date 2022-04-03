@@ -12,9 +12,11 @@ default_page = "index.html"
 def hello():
     # fallback logic for handling non-POST request
     if request.method != "POST":
+        # TODO: put a more meaningful error page that doesn't cause a HTTP 500
         render_template(default_page, self_consumption_50=0, peak_power=0)
 
-    area, img = calculate_rooftop_area(request.form["nm"])
+    address = request.form["nm"]
+    area, img = calculate_rooftop_area(address)
     print(area)
     # TODO: do something with the image (e.g. show it to the user to ensure it's the correct house)
 
