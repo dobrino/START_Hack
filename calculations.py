@@ -1,3 +1,6 @@
+"""This module provides profitability calculations for deciding
+whether to install a solar power plant on top of a given house."""
+
 solarRadiation = 1
 efficiency = .25
 specific_efficiency = [26, 59, 72, 128, 124, 155, 131, 123, 89, 63, 27, 21]
@@ -48,22 +51,13 @@ def get_break_even_time(area, self_consumption):
     return round(get_initial_investment_costs(area) / get_yearly_revenue(area, self_consumption), 2)
 
 
-def printInfo(area, self_consumption_ratio):
-    area = area
-    # input("Enter predicted self_need ratio: ")
-    self_consumption_ratio = self_consumption_ratio
-
-    print(
-        f"Peak Power of Solar Panel System on Roof: {get_peak_power(area)} kW")
+def print_info(area, self_consumption_ratio):
+    print(f"Peak Power of Solar Panel System on Roof: {get_peak_power(area)} kW")
     print(f"Yearly energy Output: {get_energy_output(area)} kWh")
-    print(
-        f"Yearly revenue in Euro: Example with 25% self consumption: {round(get_yearly_revenue(area, .25), 2)}€")
-    print(
-        f"Yearly revenue in Euro: Example with 30% self consumption: {round(get_yearly_revenue(area, .3), 2)}€")
-    print(
-        f"Yearly revenue in Euro: Example with 50% self consumption: {get_yearly_revenue(area, .5)}€")
-    print(
-        f"Yearly revenue in Euro: Example with 100% self consumption: {get_yearly_revenue(area, 1)}€")
-    print(
-        f"Installation costs/Initial investment: {get_initial_investment_costs(area)}€")
-    print(f"Break even with {self_consumption_ratio * 100}% self_consumption after {round(get_break_even_time(area, float(self_consumption_ratio)), 2)} years. Yay!")
+    print(f"Yearly revenue in Euro: Example with 25% self consumption: {round(get_yearly_revenue(area, .25), 2)}€")
+    print(f"Yearly revenue in Euro: Example with 30% self consumption: {round(get_yearly_revenue(area, .3), 2)}€")
+    print(f"Yearly revenue in Euro: Example with 50% self consumption: {get_yearly_revenue(area, .5)}€")
+    print(f"Yearly revenue in Euro: Example with 100% self consumption: {get_yearly_revenue(area, 1)}€")
+    print(f"Installation costs/Initial investment: {get_initial_investment_costs(area)}€")
+    break_even_years = round(get_break_even_time(area, float(self_consumption_ratio)), 2)
+    print(f"Break even with {self_consumption_ratio * 100}% self_consumption after {break_even_years} years. Yay!")
