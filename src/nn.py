@@ -1,101 +1,59 @@
-from tensorflow.keras.layers import Conv2D, BatchNormalization, Activation, MaxPool2D, Input, UpSampling2D, concatenate, Input
-from tensorflow.keras import Model
+"""This module provides a rooftop segmentation model."""
+
+from typing import Tuple
+from tensorflow.keras import Model, Sequential
+from tensorflow.keras.layers import \
+    Conv2D, BatchNormalization, Activation, MaxPool2D, \
+    UpSampling2D, Concatenate, Layer
 
 
-def upsample(input, input_size):
-    up = Conv2D(input_size, (3, 3), padding='same')(input)
-    up = BatchNormalization()(up)
-    up = Activation('relu')(up)
-    up = Conv2D(input_size, (3, 3), padding='same')(up)
-    up = BatchNormalization()(up)
-    up = Activation('relu')(up)
-    up = Conv2D(input_size, (3, 3), padding='same')(up)
-    up = BatchNormalization()(up)
-    return Activation('relu')(up)
+def _conv_block(depth: int, filters: int, kernel: Tuple[int, int]=(3, 3)) -> Layer:
+    block = Sequential()
+
+    for _ in range(depth):
+        block.add(Conv2D(filters, kernel, padding='same'))
+        block.add(BatchNormalization())
+        block.add(Activation('relu'))
+
+    return block
 
 
-def get_model(input_shape=(256, 256, 3),
-              num_classes=1):
-    inputs = Input(shape=input_shape)
-    # 256
+class RoofSegmentationModel(Model):
 
-    # DOWNSAMPLING to reduce processing time
-    down0 = Conv2D(32, (3, 3), padding='same')(inputs)
-    down0 = BatchNormalization()(down0)
-    down0 = Activation('relu')(down0)
-    down0 = Conv2D(32, (3, 3), padding='same')(down0)
-    down0 = BatchNormalization()(down0)
-    down0 = Activation('relu')(down0)
-    down0_pool = MaxPool2D((2, 2), strides=(2, 2))(down0)
-    # 128
+    def __init__(self, num_classes: int=1):
+        super(RoofSegmentationModel, self).__init__()
+        self.down_conv_0 = _conv_block(depth=2, filters=32)
+        self.down_conv_1 = _conv_block(depth=2, filters=64)
+        self.down_conv_2 = _conv_block(depth=2, filters=128)
+        self.down_conv_3 = _conv_block(depth=2, filters=256)
+        self.down_conv_4 = _conv_block(depth=2, filters=512)
+        self.down_conv_5 = _conv_block(depth=2, filters=1024)
+        self.up_conv_4 = _conv_block(depth=2, filters=512)
+        self.up_conv_3 = _conv_block(depth=2, filters=256)
+        self.up_conv_2 = _conv_block(depth=2, filters=128)
+        self.up_conv_1 = _conv_block(depth=2, filters=64)
+        self.up_conv_0 = _conv_block(depth=2, filters=32)
+        self.grayscale_segment = Conv2D(num_classes, (1, 1), activation='sigmoid')
+        self.pool = MaxPool2D((2, 2), strides=(2, 2))
+        self.up = UpSampling2D((2, 2), strides=(2, 2))
+        self.concat = Concatenate(axis=3)
 
-    down1 = Conv2D(64, (3, 3), padding='same')(down0_pool)
-    down1 = BatchNormalization()(down1)
-    down1 = Activation('relu')(down1)
-    down1 = Conv2D(64, (3, 3), padding='same')(down1)
-    down1 = BatchNormalization()(down1)
-    down1 = Activation('relu')(down1)
-    down1_pool = MaxPool2D((2, 2), strides=(2, 2))(down1)
-    # 64
+    def call(self, input, training: bool=False):
+        # downsampling
+        down0 = self.down_conv_0(input)
+        down1 = self.down_conv_1(self.pool(down0))
+        down2 = self.down_conv_2(self.pool(down1))
+        down3 = self.down_conv_3(self.pool(down2))
+        down4 = self.down_conv_4(self.pool(down3))
+        center = self.down_conv_5(self.pool(down4))
 
-    down2 = Conv2D(128, (3, 3), padding='same')(down1_pool)
-    down2 = BatchNormalization()(down2)
-    down2 = Activation('relu')(down2)
-    down2 = Conv2D(128, (3, 3), padding='same')(down2)
-    down2 = BatchNormalization()(down2)
-    down2 = Activation('relu')(down2)
-    down2_pool = MaxPool2D((2, 2), strides=(2, 2))(down2)
-    # 32
+        # upsampling + concat
+        up4 = self.up_conv_4(self.concat(self.up(center), down4))
+        up3 = self.up_conv_4(self.concat(self.up(up4), down3))
+        up2 = self.up_conv_4(self.concat(self.up(up3), down2))
+        up1 = self.up_conv_4(self.concat(self.up(up2), down1))
+        up0 = self.up_conv_4(self.concat(self.up(up1), down0))
 
-    down3 = Conv2D(256, (3, 3), padding='same')(down2_pool)
-    down3 = BatchNormalization()(down3)
-    down3 = Activation('relu')(down3)
-    down3 = Conv2D(256, (3, 3), padding='same')(down3)
-    down3 = BatchNormalization()(down3)
-    down3 = Activation('relu')(down3)
-    down3_pool = MaxPool2D((2, 2), strides=(2, 2))(down3)
-    # 16
-
-    down4 = Conv2D(512, (3, 3), padding='same')(down3_pool)
-    down4 = BatchNormalization()(down4)
-    down4 = Activation('relu')(down4)
-    down4 = Conv2D(512, (3, 3), padding='same')(down4)
-    down4 = BatchNormalization()(down4)
-    down4 = Activation('relu')(down4)
-    down4_pool = MaxPool2D((2, 2), strides=(2, 2))(down4)
-    # 8
-
-    center = Conv2D(1024, (3, 3), padding='same')(down4_pool)
-    center = BatchNormalization()(center)
-    center = Activation('relu')(center)
-    center = Conv2D(1024, (3, 3), padding='same')(center)
-    center = BatchNormalization()(center)
-    center = Activation('relu')(center)
-    # center
-
-    # UPSAMPLING to increase sampling rate
-    up4 = UpSampling2D((2, 2))(center)
-    up4 = concatenate([down4, up4], axis=3)
-    up4 = upsample(up4, 512)
-
-    up3 = UpSampling2D((2, 2))(up4)
-    up3 = concatenate([down3, up3], axis=3)
-    up3 = upsample(up3, 256)
-
-    up2 = UpSampling2D((2, 2))(up3)
-    up2 = concatenate([down2, up2], axis=3)
-    up2 = upsample(up2, 128)
-
-    up1 = UpSampling2D((2, 2))(up2)
-    up1 = concatenate([down1, up1], axis=3)
-    up1 = upsample(up1, 64)
-
-    up0 = UpSampling2D((2, 2))(up1)
-    up0 = concatenate([down0, up0], axis=3)
-    up0 = upsample(up0, 32)
-
-    classify = Conv2D(num_classes, (1, 1), activation='sigmoid')(up0)
-
-    model = Model(inputs=inputs, outputs=classify)
-
-    return model
+        # grayscale segmentation
+        seg_out = self.grayscale_segment(up0)
+        return seg_out

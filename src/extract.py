@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from shapely.geometry import Polygon
 
 
-def getArea(img_path):
+def get_area(img_path: str):
     img = cv2.imread(img_path)
     edges = cv2.Canny(img, 100, 200)
 
@@ -19,44 +19,41 @@ def getArea(img_path):
     print(area)
 
 
-def separate(path):
+def separate(img_path: str):
     # Load image, grayscale, Gaussian blur, Otsu's threshold
-    image = cv2.imread(path)
+    image = cv2.imread(img_path)
     original = image.copy()
     gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     blur = cv2.GaussianBlur(gray, (3, 3), 0)
-    thresh = cv2.threshold(
-        blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
+    thresh = cv2.threshold(blur, 0, 255, cv2.THRESH_BINARY_INV + cv2.THRESH_OTSU)[1]
 
     # Find contours
-    ROI_number = 0
-    cnts = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
-    cnts = cnts[0] if len(cnts) == 2 else cnts[1]
+    contours = cv2.findContours(thresh, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+    contours = contours[0] if len(contours) == 2 else contours[1]
 
     # init temp variables and constants
-    minimum_distance = 800
     middle = (400, 400)
 
-    for c in cnts:
-        # Obtain bounding rectangle to get measurements
-        x, y, w, h = cv2.boundingRect(c)
+    rect_bounds = [cv2.boundingRect(c) for c in contours]
+    contour_moments = [cv2.moments(c) for c in contours]
+    centroids = [(moments["m10"] // moments["m00"], moments["m01"] // moments["m00"])
+                 for moments in contour_moments]
+    dists_to_middle = [np.linalg.norm([middle[0] - c_x, middle[1] - c_y])
+                       for c_x, c_y in centroids]
 
-        # Find centroid
-        M = cv2.moments(c)
-        cX = int(M["m10"] / M["m00"])
-        cY = int(M["m01"] / M["m00"])
+    # print cropped patches of each region of interest
+    for i, roi_rect in enumerate(rect_bounds):
+        x_ur, y_ur, width, height = roi_rect
+        roi = original[y_ur:y_ur+height, x_ur:x_ur+width]
+        cv2.imwrite(f'ROI_{i}.png', roi)
 
-        # Crop and save ROI
-        ROI = original[y:y+h, x:x+w]
-        cv2.imwrite('ROI_{}.png'.format(ROI_number), ROI)
-        ROI_number += 1
-
-        # Draw the contour and center of the shape on the image
-        cv2.rectangle(image, (x, y), (x+w, y+h), (36, 255, 12), 4)
-        cv2.circle(image, (cX, cY), 10, (320, 159, 22), -1)
-
-        tmp_dist = np.linalg.norm(middle-(cX, cY))
-        if tmp_dist < minimum_distance:
-            minimum_distance = tmp_dist
-
+    # augment the image with a bounding box and a circle around the centroid
+    for roi_rect, centroid in zip(rect_bounds, centroids):
+        c_x, c_y = centroid
+        x_ur, y_ur, width, height = roi_rect
+        cv2.rectangle(image, (x_ur, y_ur), (x_ur+width, y_ur+height), (36, 255, 12), 4)
+        cv2.circle(image, (c_x, c_y), 10, (320, 159, 22), -1)
     cv2.imwrite('image.png', image)
+
+    closest_roi_to_middle = np.argmin(dists_to_middle)
+
