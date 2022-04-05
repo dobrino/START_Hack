@@ -4,7 +4,7 @@ from matplotlib import pyplot as plt
 from shapely.geometry import Polygon
 
 
-def get_area(img_path: str):
+def get_area(img_path: str) -> float:
     img = cv2.imread(img_path)
     edges = cv2.Canny(img, 100, 200)
 
@@ -17,6 +17,7 @@ def get_area(img_path: str):
 
     area = poly.area
     print(area)
+    return area
 
 
 def separate(img_path: str):
@@ -56,4 +57,4 @@ def separate(img_path: str):
     cv2.imwrite('image.png', image)
 
     closest_roi_to_middle = np.argmin(dists_to_middle)
-
+    # TODO: do something with the middle

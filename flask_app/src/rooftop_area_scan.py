@@ -46,7 +46,7 @@ def download_satellite_image_at_geopos(geo_pos: Tuple[float, float], api_token: 
 
     query = f'{lat},{long},{zoom}/{res_x}x{res_y}?access_token={api_token}'
     img_req_string = f"https://api.mapbox.com/styles/v1/mapbox/satellite-v9/static/{query}"
-    print(f"requesting satellite iamge with URL'{img_req_string}'")
+    print(f"requesting satellite image from URL'{img_req_string}'")
 
     res = requests.get(img_req_string)
     bytes_im = io.BytesIO(res.content)
@@ -65,7 +65,7 @@ def generate_image(address: str, api_token: str) -> Image.Image:
     return pil_image
 
 
-def calculate_rooftop_area(address: str):
+def calculate_rooftop_area(address: str) -> Tuple[float, Image.Image]:
     api_token = "pk.eyJ1IjoiaWRvbnR3ZWFyYnJhcyIsImEiOiJjbDE1MDFjZWEwdG16M2NzNmxsMDVoc2R5In0.U0rNnBS_rRe1EIQPvbID6A"
     temp_file_path = "tmp.png"
 
@@ -83,14 +83,9 @@ def calculate_rooftop_area(address: str):
     return area, img
 
 
-def main():
+if __name__ == "__main__":
     address = "Gertrud-Grunow-Straße 4"
-
-    area, _ = calculate_rooftop_area(address)
+    roof_area, _ = calculate_rooftop_area(address)
     if area is None:
         print("oops, something went wrong ...")
-    print(f"the house located at {address} has a rooftop surface area of {area} m^2")
-
-
-if __name__ == "__main__":
-    main()
+    print(f"the house located at {address} has a rooftop surface area of {roof_area} m^2")

@@ -14,4 +14,4 @@ WORKDIR /flask_app
 ADD ./flask_app .
 
 # define service entrypoint to run the flask app
-ENTRYPOINT ["python", "testing123.py"]
+ENTRYPOINT ["python", "webservice.py"]
