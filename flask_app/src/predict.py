@@ -4,17 +4,13 @@ import cv2
 import numpy as np
 
 from tensorflow.keras import Model
-from src.nn import RoofSegmentationModel
+from tensorflow.keras.models import load_model
 
 
-def load_rooftop_segmentation_model(input_shape: Tuple[int, int, int]=(256, 256, 3),
-                                    num_classes: int=1) -> Model:
-    model = RoofSegmentationModel(num_classes)
+def load_rooftop_segmentation_model(input_shape: Tuple[int, int, int]=(256, 256, 3)) -> Model:
+    model: Model = load_model('/model/model_with_weights.hdf5')
     height, width, channels = input_shape
     model.build([None, height, width, channels])
-    # model.compile(optimizer=tf.keras.optimizers.RMSprop(lr=0.0001), loss='mse', metrics=['mae'])
-    weights_path = "./../data/weights/weights.hdf5"
-    model.load_weights(weights_path)
     return model
 
 

@@ -9,6 +9,9 @@ ADD ./requirements.txt .
 RUN python -m pip install pip --upgrade && \
     python -m pip install -r requirements.txt
 
+# copy pre-trained segmentation model
+ADD ./segmentation/model_with_weights.hdf5 /model/
+
 # copy flask app
 WORKDIR /flask_app
 ADD ./flask_app .
