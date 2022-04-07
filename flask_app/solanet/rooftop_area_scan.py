@@ -13,10 +13,10 @@ import cv2
 import numpy as np
 from shapely.geometry import Polygon
 
-# pylint: disable=no-name-in-module
+# pylint: disable=no-name-in-module,import-error
 from tensorflow.keras import Model
 from tensorflow.keras.models import load_model
-# pylint: enable=no-name-in-module
+# pylint: enable=no-name-in-module,import-error
 
 
 @dataclass

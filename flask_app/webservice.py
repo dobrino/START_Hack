@@ -12,20 +12,6 @@ DEFAULT_PAGE = "index.html"
 
 rooftop_scanner = RooftopAreaScanner()
 
-EMPTY_RESULT = render_template(
-    DEFAULT_PAGE,
-    self_consumption_50=0,
-    self_consumption_30=0,
-    self_consumption_15=0,
-    panel_cost=0,
-    inverter_cost=0,
-    installation_cost=0,
-    total_cost=0,
-    roof_area=0,
-    peak_power=0,
-    break_even=0
-)
-
 
 @app.route('/', methods=["POST", "GET"])
 def hello():
@@ -52,9 +38,8 @@ def hello():
     print(f'requesting hello endpoint: {address}', file=sys.stderr)
     area, _ = rooftop_scanner.calculate_rooftop_area(address)
     print(area)
-    # TODO: do something with the image (e.g. show it to the user to ensure it's the correct house)
 
-    # TODO: handle the case when the detected area is 0 -> return error message
+    # TODO: show an error message instead of writing zeros
     if area == 0:
         return render_template(
             DEFAULT_PAGE,

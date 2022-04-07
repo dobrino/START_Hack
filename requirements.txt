@@ -6,3 +6,5 @@ opencv-python
 matplotlib
 shapely
 python-dotenv
+pylint
+pytest

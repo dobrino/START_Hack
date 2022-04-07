@@ -16,5 +16,10 @@ ADD ./segmentation/model_with_weights.hdf5 /model/
 WORKDIR /flask_app
 ADD ./flask_app .
 
+# run the linter to enforce the PEP coding style
+WORKDIR /
+RUN pylint flask_app --extension-pkg-whitelist=cv2 --fail-under=9.5
+WORKDIR /flask_app
+
 # define service entrypoint to run the flask app
 ENTRYPOINT ["python", "webservice.py"]
